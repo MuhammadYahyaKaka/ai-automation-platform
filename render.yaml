@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ai-automation-platform
+    runtime: node
+    buildCommand: cd client && npm install && npm run build && cd ../server && npm install
+    startCommand: cd server && node index.js
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      # Optional - the platform works without an AI key (built-in parser)
+      - key: OPENAI_API_KEY
+        sync: false
