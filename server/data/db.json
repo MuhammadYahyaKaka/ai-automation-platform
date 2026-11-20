@@ -1,0 +1,328 @@
+{
+  "users": [],
+  "automations": [],
+  "executions": [],
+  "records": [],
+  "integrations": [
+    {
+      "id": "gmail",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "google_sheets",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "whatsapp",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "telegram",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "discord",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "slack",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "webhooks",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "rest_api",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "wordpress",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "woocommerce",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "shopify",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    },
+    {
+      "id": "crm",
+      "enabled": true,
+      "connected": false,
+      "credentials": null,
+      "lastError": null,
+      "connectedAt": null
+    }
+  ],
+  "templates": [
+    {
+      "id": "tpl_new_customer",
+      "name": "New Customer Notification",
+      "description": "When a customer registers, save them and send a welcome email.",
+      "trigger": {
+        "type": "customer_registered",
+        "label": "When a customer registers"
+      },
+      "steps": [
+        {
+          "type": "save_record",
+          "label": "Save customer in database",
+          "config": {}
+        },
+        {
+          "type": "send_email",
+          "label": "Send welcome email",
+          "config": {
+            "subject": "Welcome!",
+            "template": "Welcome {{name}}! Thanks for registering."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_auto_reply",
+      "name": "Automatic Email Replies",
+      "description": "When a contact form is submitted, save the lead and reply by email automatically.",
+      "trigger": {
+        "type": "form_submission",
+        "label": "When a contact form is submitted"
+      },
+      "steps": [
+        {
+          "type": "save_record",
+          "label": "Save form submission",
+          "config": {}
+        },
+        {
+          "type": "send_email",
+          "label": "Send automatic reply email",
+          "config": {
+            "subject": "We received your message",
+            "template": "Hi {{name}}, thanks for contacting us. We will reply soon."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_new_order",
+      "name": "New Order Notifications",
+      "description": "When a new order is received, check payment, save it and notify the admin on WhatsApp.",
+      "trigger": {
+        "type": "new_order",
+        "label": "When a new order is received"
+      },
+      "steps": [
+        {
+          "type": "condition",
+          "label": "Check payment status is paid",
+          "config": {
+            "field": "paymentStatus",
+            "equals": "paid"
+          }
+        },
+        {
+          "type": "save_record",
+          "label": "Save order in database",
+          "config": {}
+        },
+        {
+          "type": "send_whatsapp",
+          "label": "Send WhatsApp notification to admin",
+          "config": {
+            "template": "New order {{orderId}} of {{amount}} received."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_daily_report",
+      "name": "Daily Business Reports",
+      "description": "Every day at 9 AM, build a summary of new orders and email it to you.",
+      "trigger": {
+        "type": "schedule",
+        "label": "Every day at 9:00 AM",
+        "config": {
+          "schedule": "daily",
+          "time": "09:00",
+          "timezone": "Asia/Karachi"
+        }
+      },
+      "steps": [
+        {
+          "type": "generate_summary",
+          "label": "Generate summary of new orders",
+          "config": {}
+        },
+        {
+          "type": "send_email",
+          "label": "Email the daily summary",
+          "config": {
+            "subject": "Daily business report",
+            "template": "{{summary}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_lead",
+      "name": "Lead Management",
+      "description": "Save new leads and push them to your CRM and team chat.",
+      "trigger": {
+        "type": "form_submission",
+        "label": "When a lead form is submitted"
+      },
+      "steps": [
+        {
+          "type": "save_record",
+          "label": "Save lead in database",
+          "config": {}
+        },
+        {
+          "type": "http_call",
+          "label": "Push lead to CRM",
+          "config": {
+            "integration": "crm"
+          }
+        },
+        {
+          "type": "send_telegram",
+          "label": "Notify team on Telegram",
+          "config": {
+            "template": "New lead: {{name}} ({{email}})"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_followup",
+      "name": "Customer Follow-ups",
+      "description": "When an order is completed, wait, then send a follow-up email asking for feedback.",
+      "trigger": {
+        "type": "order_completed",
+        "label": "When an order is marked as completed"
+      },
+      "steps": [
+        {
+          "type": "delay",
+          "label": "Wait before follow-up",
+          "config": {
+            "seconds": 1
+          }
+        },
+        {
+          "type": "send_email",
+          "label": "Send follow-up email",
+          "config": {
+            "subject": "How was your order?",
+            "template": "Hi {{name}}, how was your recent order {{orderId}}?"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_appointment",
+      "name": "Appointment Reminders",
+      "description": "On a schedule, send appointment reminder messages on WhatsApp.",
+      "trigger": {
+        "type": "schedule",
+        "label": "Every day at 9:00 AM",
+        "config": {
+          "schedule": "daily",
+          "time": "09:00",
+          "timezone": "Asia/Karachi"
+        }
+      },
+      "steps": [
+        {
+          "type": "generate_summary",
+          "label": "Collect today appointments",
+          "config": {}
+        },
+        {
+          "type": "send_whatsapp",
+          "label": "Send WhatsApp reminder",
+          "config": {
+            "template": "Reminder: {{summary}}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tpl_sync",
+      "name": "Data Synchronization",
+      "description": "When data is saved, forward it to a webhook / REST endpoint to keep systems in sync.",
+      "trigger": {
+        "type": "form_submission",
+        "label": "When new data arrives"
+      },
+      "steps": [
+        {
+          "type": "save_record",
+          "label": "Save data in database",
+          "config": {}
+        },
+        {
+          "type": "http_call",
+          "label": "Forward data via webhook",
+          "config": {
+            "integration": "webhooks"
+          }
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "platformName": "Automation Platform",
+    "whatsappVerifyToken": "my-whatsapp-verify-token",
+    "defaultRetryLimit": 2,
+    "demoMode": true
+  },
+  "resetCodes": []
+}
