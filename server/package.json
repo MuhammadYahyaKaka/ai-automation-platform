@@ -1,0 +1,1 @@
+{"dependencies":{"cors":"^2.8.5","express":"^4.19.2"},"main":"index.js","name":"automation-platform-server","private":true,"scripts":{"dev":"node index.js","start":"node index.js"},"type":"commonjs","version":"1.0.0"}
